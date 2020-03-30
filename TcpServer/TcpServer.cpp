@@ -43,7 +43,7 @@ int main()
 
    if (true == serverSocket->bind(nullptr, port))
    {
-      std::cout << "Server socket bound [" << "INADDR_ANY" << ", " << port << "]\n";
+      std::cout << "Server socket bound. Port: " << port << "\n";
    }
    else
    {
@@ -90,11 +90,11 @@ int main()
          if ((bytesReceived = clientSocket->recv(recvBuff, RECV_BUFF_SIZE)) > 0)
          {
             std::cout << "Message (" << bytesReceived << " bytes) from client [";
-            std::cout << clientSocket->getLocalAddressIp() << ", " << clientSocket->getPort() << "]: ";
+            std::cout << clientSocket->getLocalAddressIp() << ", " << clientSocket->getLocalPort() << "]: ";
             std::cout << recvBuff << "\n";
             if (true == clientSocket->send(recvBuff, bytesReceived))
             {
-               std::cout << "Send to client: " << recvBuff << "\n";
+               std::cout << "Reply message to client: " << recvBuff << "\n";
             }
             else
             {
@@ -106,7 +106,8 @@ int main()
          }
          else if (bytesReceived == 0)
          {
-            std::cout << "Client disconnected\n";
+            std::cout << "Client [" << clientSocket->getLocalAddressIp() << ", ";
+            std::cout << clientSocket->getLocalPort() << "] disconnected\n";
             clientSocket->close();
          }
          else

@@ -13,7 +13,7 @@ public:
    ~ServerSocket();
    bool bind(const char* address, const uint16_t port);
    bool listen(const int backlog);
-   ClientSocket* accept(void);
+   ClientSocket* accept(void) const;
 };
 
 #endif //__SERVER_SOCKET_H__

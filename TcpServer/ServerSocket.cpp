@@ -41,24 +41,24 @@ bool ServerSocket::listen(const int backlog)
    return rV;
 }
 
-ClientSocket* ServerSocket::accept(void)
+ClientSocket* ServerSocket::accept(void) const
 {
    // locals
    ClientSocket* clientSocket = nullptr;
-   std::unique_ptr<sockaddr_in> remote = std::make_unique<sockaddr_in>();
-   std::unique_ptr<sockaddr_in> sockAddr = std::make_unique<sockaddr_in>();
-   int remoteSize = sizeof(*remote), sockAddrSize = sizeof(*sockAddr);
-   SOCKET clientSocketId = ::accept(this->socketId, (sockaddr*)remote.get(), &remoteSize);
+   std::unique_ptr<sockaddr_in> remoteClientSockAddr = std::make_unique<sockaddr_in>();
+   std::unique_ptr<sockaddr_in> localClientSockAddr = std::make_unique<sockaddr_in>();
+   int remoteSize = sizeof(*remoteClientSockAddr), sockAddrSize = sizeof(*localClientSockAddr);
+   SOCKET clientSocketId = ::accept(this->socketId, (sockaddr*)remoteClientSockAddr.get(), &remoteSize);
 
    if (clientSocketId != INVALID_SOCKET &&
-      ::getsockname(clientSocketId, (sockaddr*)sockAddr.get(), &sockAddrSize) == 0)
+      ::getsockname(clientSocketId, (sockaddr*)localClientSockAddr.get(), &sockAddrSize) == 0)
    {
       clientSocket = new ClientSocket(clientSocketId);
 
-      clientSocket->setLocalAddressIp(Socket::convertAddressIpToStr(remote.get()).c_str());
-      clientSocket->setPort(Socket::convertPortFromNetworkEndianness(remote.get()));
-      clientSocket->setServerAddressIp(Socket::convertAddressIpToStr(sockAddr.get()).c_str());
-      clientSocket->setLocalPort(Socket::convertPortFromNetworkEndianness(sockAddr.get()));
+      clientSocket->setLocalAddressIp(Socket::convertAddressIpToStr(remoteClientSockAddr.get()).c_str());
+      clientSocket->setLocalPort(Socket::convertPortFromNetworkEndianness(remoteClientSockAddr.get()));
+      clientSocket->setServerAddressIp(Socket::convertAddressIpToStr(localClientSockAddr.get()).c_str());
+      clientSocket->setPort(Socket::convertPortFromNetworkEndianness(localClientSockAddr.get()));
    }
 
    return clientSocket;
