@@ -6,7 +6,7 @@
 
 #define RECV_BUFF_SIZE 4096
 #define DLL_WINSOCK_VERSION MAKEWORD(2, 2)
-#define BACKLOG 1
+#define MAX_SOCKETS_CONNECTION 1
 
 int main()
 {
@@ -47,7 +47,7 @@ int main()
    }
    else
    {
-      std::cout << "Cannot bind socket server [" << "INADDR_ANY" << ", " << port << "]\n";
+      std::cout << "Cannot bind socket server.\n";
       std::cout << "Error: " << winsockManager->getErrorMessage() << "\n";
       serverSocket->close();
       std::cout << "Server socket closed" << "\n";
@@ -55,9 +55,9 @@ int main()
       return -1;
    }
 
-   if (true == serverSocket->listen(BACKLOG))
+   if (true == serverSocket->listen(MAX_SOCKETS_CONNECTION))
    {
-      std::cout << "Server socket started listening [max " << BACKLOG << " connections]\n";
+      std::cout << "Server socket started listening [max " << MAX_SOCKETS_CONNECTION << " connections]\n";
    }
    else
    {
@@ -77,7 +77,7 @@ int main()
       if (clientSocket != nullptr)
       {
          std::cout << "New client [" << clientSocket->getLocalAddressIp() << ", ";
-         std::cout << clientSocket->getPort() << "] connected with Server\n";
+         std::cout << clientSocket->getPort() << "] connected with Server\n\n";
       }
       else
       {
