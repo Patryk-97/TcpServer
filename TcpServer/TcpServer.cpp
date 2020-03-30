@@ -12,7 +12,6 @@ int main()
 {
    std::unique_ptr<WinsockManager> winsockManager = std::make_unique<WinsockManager>();
    std::unique_ptr<ServerSocket> serverSocket = nullptr;
-   //std::string ipAddress;
    uint16_t port;
    char recvBuff[RECV_BUFF_SIZE];
    int bytesSend = 0;
@@ -23,9 +22,6 @@ int main()
       printf("Winsock initialization error\n");
       return -1;
    }
-
-   //std::cout << "Enter ip address or DNS address: ";
-   //std::cin >> ipAddress;
 
    std::cout << "Enter port: ";
    std::cin >> port;
@@ -60,7 +56,7 @@ int main()
 
    if (true == serverSocket->listen(BACKLOG))
    {
-      std::cout << "Server socket started listening [max " << BACKLOG << "connections\n";
+      std::cout << "Server socket started listening [max " << BACKLOG << " connections]\n";
    }
    else
    {
@@ -74,7 +70,10 @@ int main()
 
    ClientSocket* clientSocket = serverSocket->accept();
 
-   std::cout << "sock name: " << clientSocket->getSocketName();
+   std::cout << "GetLocalAddressIP: " << clientSocket->getLocalAddressIp() << "\n";
+   std::cout << "GetServerAddressIP: " << clientSocket->getServerAddressIp() << "\n";
+   std::cout << "GetPort: " << clientSocket->getPort() << "\n";
+   std::cout << "GetLocalPort: " << clientSocket->getLocalPort() << "\n";
 
    if (clientSocket != nullptr)
    {
@@ -90,7 +89,6 @@ int main()
       if ((bytesReceived = clientSocket->recv(recvBuff, RECV_BUFF_SIZE)) > 0)
       {
          std::cout << "Output from client: " << recvBuff << "\n";
-         //std::cout << "Bytes send: " << bytesSend << ", bytes received: " << bytesReceived << "\n";
          if (true == clientSocket->send(recvBuff, bytesReceived))
          {
             std::cout << "Send to client: " << recvBuff << "\n";

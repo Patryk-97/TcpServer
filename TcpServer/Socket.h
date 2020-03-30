@@ -20,8 +20,6 @@ public:
    int recv(char* recvBuff, int recvBuffSize);
    void close();
 
-   std::string getIpAddress(void) const;
-   std::string getPort(void) const;
    std::string getIpProtocolStr(void) const;
    IpProtocol getIpProtocol(void) const;
    std::string getTxProtocolStr(void) const;
@@ -34,6 +32,8 @@ protected:
    bool fillNetworkAddressStructure(const char* address);
    void fillPort(uint16_t port);
    void fillIpProtocolFamily(void);
+   static std::string convertAddressIpToStr(const sockaddr_in* socketAddr);
+   static uint16_t convertPortFromNetworkEndianness(const sockaddr_in* socketAddr);
 
 protected:
 

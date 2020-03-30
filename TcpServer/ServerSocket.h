@@ -5,7 +5,6 @@
 
 #include "Socket.h"
 #include "ClientSocket.h"
-#include <iostream>
 
 class ServerSocket : public Socket
 {

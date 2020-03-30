@@ -87,28 +87,6 @@ void Socket::close()
    }
 }
 
-std::string Socket::getIpAddress(void) const
-{
-   // locals
-   std::string rV = "\"";
-
-   rV += std::to_string(this->socketAddr->sin_addr.S_un.S_un_b.s_b1) + ".";
-   rV += std::to_string(this->socketAddr->sin_addr.S_un.S_un_b.s_b2) + ".";
-   rV += std::to_string(this->socketAddr->sin_addr.S_un.S_un_b.s_b3) + ".";
-   rV += std::to_string(this->socketAddr->sin_addr.S_un.S_un_b.s_b4) + "\"";
-
-   return rV;
-}
-
-std::string Socket::getPort(void) const
-{
-   // locals
-   uint16_t port = (this->socketAddr->sin_port & 0xFF00) >> 8 | (this->socketAddr->sin_port & 0x00FF) << 8;
-   std::string rV = std::to_string(port);
-
-   return rV;
-}
-
 std::string Socket::getIpProtocolStr(void) const
 {
    // locals
@@ -194,4 +172,25 @@ void Socket::fillIpProtocolFamily(void)
    {
       this->socketAddr->sin_family = AF_INET6;
    }
+}
+
+std::string Socket::convertAddressIpToStr(const sockaddr_in* socketAddr)
+{
+   // locals
+   std::string addressIp = "\"";
+
+   addressIp += std::to_string(socketAddr->sin_addr.S_un.S_un_b.s_b1) + ".";
+   addressIp += std::to_string(socketAddr->sin_addr.S_un.S_un_b.s_b2) + ".";
+   addressIp += std::to_string(socketAddr->sin_addr.S_un.S_un_b.s_b3) + ".";
+   addressIp += std::to_string(socketAddr->sin_addr.S_un.S_un_b.s_b4) + "\"";
+
+   return addressIp;
+}
+
+uint16_t Socket::convertPortFromNetworkEndianness(const sockaddr_in* socketAddr)
+{
+   // locals
+   uint16_t port = (socketAddr->sin_port & 0xFF00) >> 8 | (socketAddr->sin_port & 0x00FF) << 8;
+
+   return port;
 }

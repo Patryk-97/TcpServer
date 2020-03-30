@@ -46,23 +46,20 @@ ClientSocket* ServerSocket::accept(void)
    // locals
    ClientSocket* clientSocket = nullptr;
    std::unique_ptr<sockaddr_in> remote = std::make_unique<sockaddr_in>();
-   int size = sizeof(*remote);
-   SOCKET clientSocketId = ::accept(this->socketId, (sockaddr*)remote.get(), &size);
+   std::unique_ptr<sockaddr_in> sockAddr = std::make_unique<sockaddr_in>();
+   int remoteSize = sizeof(*remote), sockAddrSize = sizeof(*sockAddr);
+   SOCKET clientSocketId = ::accept(this->socketId, (sockaddr*)remote.get(), &remoteSize);
 
-   if (clientSocketId != INVALID_SOCKET)
+   if (clientSocketId != INVALID_SOCKET &&
+      ::getsockname(clientSocketId, (sockaddr*)sockAddr.get(), &sockAddrSize) == 0)
    {
       clientSocket = new ClientSocket(clientSocketId);
+
+      clientSocket->setLocalAddressIp(Socket::convertAddressIpToStr(remote.get()).c_str());
+      clientSocket->setPort(Socket::convertPortFromNetworkEndianness(remote.get()));
+      clientSocket->setServerAddressIp(Socket::convertAddressIpToStr(sockAddr.get()).c_str());
+      clientSocket->setLocalPort(Socket::convertPortFromNetworkEndianness(sockAddr.get()));
    }
-
-   std::string ipAddress = "\"";
-
-   ipAddress += std::to_string(remote->sin_addr.S_un.S_un_b.s_b1) + ".";
-   ipAddress += std::to_string(remote->sin_addr.S_un.S_un_b.s_b2) + ".";
-   ipAddress += std::to_string(remote->sin_addr.S_un.S_un_b.s_b3) + ".";
-   ipAddress += std::to_string(remote->sin_addr.S_un.S_un_b.s_b4) + "\"";
-
-   std::cout << "Polaczenie z " << ipAddress << ": " << ntohs(remote->sin_port) << "\n";
-
 
    return clientSocket;
 }
