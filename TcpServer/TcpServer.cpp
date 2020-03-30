@@ -13,7 +13,7 @@ int main()
    std::unique_ptr<WinsockManager> winsockManager = std::make_unique<WinsockManager>();
    std::unique_ptr<ServerSocket> serverSocket = nullptr;
    ClientSocket* clientSocket = nullptr;
-   uint16_t port;
+   uint16_t port = 0;
    char recvBuff[RECV_BUFF_SIZE];
    int bytesReceived = 0;
    char decision = 'Y';
