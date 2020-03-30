@@ -27,6 +27,12 @@ int main()
    std::cout << "Enter port: ";
    std::cin >> port;
 
+   if (port == 0)
+   {
+      std::cout << "You entered wrong port. Closing...\n";
+      return -1;
+   }
+
    serverSocket = std::make_unique<ServerSocket>();
 
    if (true == serverSocket->init(IpProtocol::IPV4, TxProtocol::TCP))
