@@ -63,3 +63,8 @@ ClientSocket* ServerSocket::accept(void) const
 
    return clientSocket;
 }
+
+uint16_t ServerSocket::getLocalPort(void) const
+{
+   return Socket::convertPortFromNetworkEndianness(this->socketAddr.get());
+}

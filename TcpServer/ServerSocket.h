@@ -14,6 +14,7 @@ public:
    bool bind(const char* address, const uint16_t port);
    bool listen(const int backlog);
    ClientSocket* accept(void) const;
+   uint16_t getLocalPort(void) const;
 };
 
 #endif //__SERVER_SOCKET_H__

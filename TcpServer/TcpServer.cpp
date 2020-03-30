@@ -94,11 +94,11 @@ int main()
             std::cout << recvBuff << "\n";
             if (true == clientSocket->send(recvBuff, bytesReceived))
             {
-               std::cout << "Reply message to client: " << recvBuff << "\n";
+               std::cout << "Reply message to client: " << recvBuff << "\n\n";
             }
             else
             {
-               std::cout << "Reply message has not sent\n" << "\n";
+               std::cout << "Reply message has not sent\n";
                std::cout << "Error: " << winsockManager->getErrorMessage() << "\n";
                clientSocket->close();
                break;
@@ -119,13 +119,13 @@ int main()
 
       } while (bytesReceived > 0);
 
-      std::cout << "Waiting for another client or stop listening? Y/N ";
+      std::cout << "Waiting for another client or stop listening? Y/N: ";
       std::cin >> decision;
 
    } while (decision == 'y' || decision == 'Y');
 
    serverSocket->close();
-   std::cout << "Server socket closed" << "\n";
+   std::cout << "Server socket closed\n";
    winsockManager->cleanup();
    return 0;
 }
