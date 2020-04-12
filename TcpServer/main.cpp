@@ -12,7 +12,7 @@ int main()
 {
    std::unique_ptr<WinsockManager> winsockManager = std::make_unique<WinsockManager>();
    std::unique_ptr<ServerSocket> serverSocket = nullptr;
-   ClientSocket* clientSocket = nullptr;
+   std::unique_ptr<ClientSocket> clientSocket = nullptr;
    uint16_t port = 7;
    char recvBuff[RECV_BUFF_SIZE];
    int bytesReceived = 0;
@@ -78,7 +78,7 @@ int main()
    do
    {
       std::cout << "Waiting for new client ...\n";
-      clientSocket = serverSocket->accept();
+      clientSocket.reset(serverSocket->accept());
 
       if (clientSocket != nullptr)
       {
